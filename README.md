@@ -11,5 +11,5 @@ Script made with a list of functions that can automatically update all the sprea
 Given a list of people in a Google Sheet, read each person and collect their information in the sheet. Then create new Google Sheets in a folder for each person based on a template depending on the person's position.
 
 ## Screenshots:
-![Apartment Finance](https://raw.githubusercontent.com/sdavidliu/Google-Scripts/tree/master/Screenshots/apartmentfinance.png)
-![Multiple Sheets](https://raw.githubusercontent.com/sdavidliu/Google-Scripts/tree/master/Screenshots/updatemultiplesheets.png)
+![Apartment Finance](https://github.com/sdavidliu/Google-Scripts/blob/master/Screenshots/apartmentfinance.png)
+![Multiple Sheets](https://github.com/sdavidliu/Google-Scripts/blob/master/Screenshots/updatemultiplesheets.png)
