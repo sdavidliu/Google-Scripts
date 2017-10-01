@@ -1,131 +1,68 @@
 /*
-Summary:
-Run "createStudentFiles()" to create new student files based on a template.
-Make sure to set the "file" variable to the right template.
-Make sure to set column variables to which column each information is at.
-This code loops through every student and creates a file for every row.
-
-If error:
-Go to View -> Logs to see error logs.
-Contact David Liu (Created September 2017)
-*/
+ Summary:
+ Run "createStudentFiles()" to create new student files based on a template.
+ Make sure to set the "file" variable to the right template.
+ Make sure to set column variables to which column each information is at.
+ This code loops through every student and creates a file for every row.
+ 
+ If error:
+ Go to View -> Logs to see error logs.
+ Contact David Liu (Created September 2017)
+ */
 
 function createStudentFiles() {
-  //This is your current sheet with list of students.
-  var studentSheet = SpreadsheetApp.getActiveSheet();
-
-  //Make sure to set the ID to the template.
-  var file = DriveApp.getFileById("1PDqmG1xSk-uqMFJSBJA495TxF6Tv0HgzZ7fQ7FYOc3o");
-
-  //Set these variables to which column. Ex. The name column is in column 1.
-  var nameCol = 1
-  var departmentCol = 2
-  var idCol = 3
-  var hireCol = 4
-  var gradCol = 5
-  var statusCol = 6
-  var checkCol1 = 8
-  var checkCol2 = 9
-  var checkCol3 = 10
-  var checkCol4 = 11
-
-  for (i = 1; i < studentSheet.getLastRow(); i += 1) {
-    var name = studentSheet.getRange(i + 1, nameCol).getValue();
-    var department = studentSheet.getRange(i + 1, departmentCol).getValue();
-    var id = studentSheet.getRange(i + 1, idCol).getValue();
-    var hire = studentSheet.getRange(i + 1, hireCol).getValue();
-    var grad = studentSheet.getRange(i + 1, gradCol).getValue();
-    var status = studentSheet.getRange(i + 1, statusCol).getValue();
-    var check1 = studentSheet.getRange(i + 1, checkCol1).getValue();
-    var check2 = studentSheet.getRange(i + 1, checkCol2).getValue();
-    var check3 = studentSheet.getRange(i + 1, checkCol3).getValue();
-    var check4 = studentSheet.getRange(i + 1, checkCol4).getValue();
-
-    //Set which template to copy depending on department, make sure to get department name exactly the same!
-    if (department == "AntMedia Videographer") {
-      file = DriveApp.getFileById("1PDqmG1xSk-uqMFJSBJA495TxF6Tv0HgzZ7fQ7FYOc3o");
-    }else if (department == "Marketing") {
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "Marketing/Ops"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "AntMedia Videographer & Photographer"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "AntMedia Photographer"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "AntMedia/Ops"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "Operations"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "Reservation Specialist"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else if (department == "Marketing Assisstant"){
-      //file = DriveApp.getFileById("PUT ID HERE");
-    }else{
-      //file = DriveApp.getFileById("PUT ID HERE");
+    //This is your current sheet with list of students.
+    var studentSheet = SpreadsheetApp.getActiveSheet();
+    
+    //Make sure to set the ID to the template.
+    var file = DriveApp.getFileById("1JXRMAcHjONC-r-rDgAtmSp7U5lPIXKcdG67KVUOiOJg");
+    
+    //Set these variables to which column.
+    var nameCol = 4
+    var empidCol = 8
+    var majorCol = 10
+    var phoneCol = 9
+    var hireCol = 14
+    var gradCol = 11
+    var statusCol = 12
+    var emailCol = 6
+    
+    var array = studentSheet.getRange(1, 1, studentSheet.getLastRow(), studentSheet.getLastColumn()).getValues()
+    
+    //Set these two variables to create a certain amount at a time. Maybe rows 9 to 50? Then 51 to 90? etc.
+    var firstRow = 9
+    var lastRow = 50
+    
+    //for (i = 1; i < studentSheet.getLastRow(); i += 1) {
+    for (i = firstRow; i < lastRow; i += 1) {
+        var name = array[i][nameCol-1];
+        var empid = array[i][empidCol-1];
+        var hire = array[i][hireCol-1];
+        var grad = array[i][gradCol-1];
+        var status = array[i][statusCol-1];
+        var major = array[i][majorCol-1];
+        var phone = array[i][phoneCol-1];
+        var email = array[i][emailCol-1];
+        
+        //Only creates new files for ACTIVE students
+        if (status.indexOf("Active") != -1) {
+            
+            //Make sure to copy and paste the ID of the folder you want every sheet to be copied to!
+            var newFile = file.makeCopy(name + " Operations Leveling Requirements", DriveApp.getFolderById("0B9SeY6Mq4-wMdFNsOS0wQmhGeTA"));
+            
+            var sheet = SpreadsheetApp.open(newFile).getActiveSheet();
+            //You may need to adjust the cell location depending on template. For ex. Videographer template has name at C8.
+            sheet.getRange("C8").setValue(name);
+            sheet.getRange("F8").setValue(empid);
+            sheet.getRange("C10").setValue(major);
+            sheet.getRange("F11").setValue(phone);
+            sheet.getRange("C11").setValue(email);
+            sheet.getRange("C9").setValue(hire);
+            sheet.getRange("F9").setValue(grad);
+            sheet.getRange("C8:C11").setHorizontalAlignment("left")
+            sheet.getRange("F8:G11").setHorizontalAlignment("left")
+            
+        }
     }
-
-    //Only creates new files for ACTIVE students
-    if (status.indexOf("Active") != -1) {
-
-      //Make sure to copy and paste the ID of the folder you want every sheet to be copied to!
-      var newFile = file.makeCopy(name + " Videographer Leveling Requirements", DriveApp.getFolderById("0B6yPbMopq0nJb0hKWHlSeUVrTUE"));
-
-      var sheet = SpreadsheetApp.open(newFile).getActiveSheet();
-      //You may need to adjust the cell location depending on template. For ex. Videographer template has name at C8.
-      sheet.getRange("C8").setValue(name.toUpperCase());
-      sheet.getRange("F8").setValue(id);
-      sheet.getRange("F8").setHorizontalAlignment("left")
-      try {
-        sheet.getRange("C9").setValue(Utilities.formatDate(hire, "PDT", "MM/dd/yyyy"))
-        sheet.getRange("C9").setHorizontalAlignment("left")
-      } catch(e) {
-        Logger.log(e)
-      }
-      try {
-        sheet.getRange("F9").setValue(Utilities.formatDate(grad, "PDT", "MM/yyyy"))
-        sheet.getRange("F9").setHorizontalAlignment("left")
-      } catch(e) {
-        Logger.log(e)
-      }
-      try {
-        sheet.getRange("C15").setValue(Utilities.formatDate(check1, "PDT", "MM/dd/yyyy") + ", " + Utilities.formatDate(check2, "PDT", "MM/dd/yyyy") + ", " + Utilities.formatDate(check3, "PDT", "MM/dd/yyyy") + ", " + Utilities.formatDate(check4, "PDT", "MM/dd/yyyy"))
-        sheet.getRange("C15").setHorizontalAlignment("left")
-      } catch(e) {
-        Logger.log(e)
-      }
-    }
-
-    //Everything that is not found is set to 'xxxx'
-    setEverythingElseX(sheet)
-
-    //Uncomment the break below to just test it on one student
-    //break
-  }
 }
 
-function setEverythingElseX(sheet) {
-  if (sheet.getRange("C8").getValue() == "") {
-    sheet.getRange("C8").setValue("xxxx")
-  }
-  if (sheet.getRange("F8").getValue() == "") {
-    sheet.getRange("F8").setValue("xxxx")
-  }
-  if (sheet.getRange("C9").getValue() == "") {
-    sheet.getRange("C9").setValue("xxxx")
-  }
-  if (sheet.getRange("F9").getValue() == "") {
-    sheet.getRange("F9").setValue("xxxx")
-  }
-  if (sheet.getRange("C10").getValue() == "") {
-    sheet.getRange("C10").setValue("xxxx")
-  }
-  if (sheet.getRange("F10").getValue() == "") {
-    sheet.getRange("F10").setValue("xxxx")
-  }
-  if (sheet.getRange("C11").getValue() == "") {
-    sheet.getRange("C11").setValue("xxxx")
-  }
-  if (sheet.getRange("F11").getValue() == "") {
-    sheet.getRange("F11").setValue("xxxx")
-  }
-}
